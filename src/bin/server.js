@@ -1,49 +1,39 @@
 import dotenv from 'dotenv';
-import { createServer } from 'node:http';
+import http from "http";
 import { Server } from 'socket.io';
 import app from "../app.js";
+
+import { createServer } from 'node:http';
 import {connectMongo} from "../db/connection.js";
 
-const server = createServer(app);
+const server = http.createServer(app);
 export const io = new Server(server, {
 	cors: {
 		origin: "*",
 	},
 });
 
-dotenv.config({ debug: true });
-
+dotenv.config();
 const PORT = process.env.PORT || 10000;
-// const PORT = 4000;
-
-// const io = new Server(server);
-
-
-// app.get('/', (req, res) => {
-// 	// console.log("reqasassa", req.body)
-// 	res.json({
-// 		message: 'Hello world! 789',
-// 	});
-// });
 
 
 const start = async () => {
 	try {
-		await connectMongo();
+		// await connectMongo();
 		
-		app.listen(PORT, (err) => {
+		server.listen(PORT, (err) => {
 			if (err) console.error('Error at server.js launch:', err);
 			console.log(`Server works at port !!!!!!!!!!!${PORT}!`);
 		});
 		
-		io.on('connection', (socket) => {
+		io.on('connection', async (socket) => {
 			console.log('a user connected');
-			console.log('socket', socket);
-			console.log('socket.id', socket.id);
+			// console.log('socket', socket);
+			// console.log('socket.id', socket.id);
 			
 			socket.on("CHAT_MESSAGE", async (message) => {
 				console.log("Message", message)
-				io.emit("CHAT_MESSAGE", message);
+				// io.emit("CHAT_MESSAGE", message);
 			})
 		});
 	} catch (err) {

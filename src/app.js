@@ -20,6 +20,8 @@ app.use(logger(formatsLogger));
 
 app.use(express.json());
 app.use(cors());
+app.use('/auth', authRouter);
+
 // app.use(logger('dev'));
 
 
@@ -40,7 +42,6 @@ app.use(cors());
 // app.use(logger('dev'));
 
 // app.use('/api/tasks', taskRouter);
-// app.use('/api/auth', authRouter);
 
 // app.use(errorHandler);
 
