@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { login, getAllUsers, updateUser } from "../services/authService.js";
+import { login} from "../services/authService.js";
 
 // eslint-disable-next-line consistent-return
 export const authController = async (req, res) => {
@@ -11,7 +11,7 @@ export const authController = async (req, res) => {
 
     const data = await login(username, password);
     
-    // console.log("DATA", data);
+    console.log("DATA", data);
 
     if (!data) {
       return res.status(409).json({
@@ -30,37 +30,37 @@ export const authController = async (req, res) => {
   }
 };
 
-  const [bearer, token] = req.headers.authorization.split(" ");
-
-  if (bearer !== "Bearer") {
-    return res.status(401).json({
-      status: "401 Unauthorized",
-      code: 401,
-      message: "Username or password is wrong --bearer",
-    });
-  }
-
-  if (token === null) {
-    return res.status(401).json({
-      status: "401 Unauthorized",
-      code: 401,
-      message: "Unauthorized token",
-    });
-  }
-
-  try {
-    const user = jwt.decode(token, process.env.JWT_SECRET);
-    req.user = user;
-    res.json({
-      status: "success",
-      user,
-      token,
-    });
-  } catch (err) {
-    return res.status(401).json({
-      status: "401 Unauthorized",
-      code: 401,
-      message: "Please, provide a token",
-    });
-  }
-};
+//   const [bearer, token] = req.headers.authorization.split(" ");
+//
+//   if (bearer !== "Bearer") {
+//     return res.status(401).json({
+//       status: "401 Unauthorized",
+//       code: 401,
+//       message: "Username or password is wrong --bearer",
+//     });
+//   }
+//
+//   if (token === null) {
+//     return res.status(401).json({
+//       status: "401 Unauthorized",
+//       code: 401,
+//       message: "Unauthorized token",
+//     });
+//   }
+//
+//   try {
+//     const user = jwt.decode(token, process.env.JWT_SECRET);
+//     req.user = user;
+//     res.json({
+//       status: "success",
+//       user,
+//       token,
+//     });
+//   } catch (err) {
+//     return res.status(401).json({
+//       status: "401 Unauthorized",
+//       code: 401,
+//       message: "Please, provide a token",
+//     });
+//   }
+// };

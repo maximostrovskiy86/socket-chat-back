@@ -1,5 +1,5 @@
 import Router from "express";
-import { addUserValidation } from "../middleware/validationMiddleware.js";
+// import { addUserValidation } from "../middleware/validationMiddleware.js";
 
 import {
   authController,

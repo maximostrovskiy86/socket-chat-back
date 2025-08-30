@@ -2,6 +2,7 @@ import express from "express";
 import cors from 'cors';
 import pino from 'pino-http';
 import logger from 'morgan';
+import authRouter from "./routes/authRouter.js";
 
 
 const app = express();
