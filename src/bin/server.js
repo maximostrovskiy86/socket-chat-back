@@ -2,8 +2,7 @@ import dotenv from 'dotenv';
 import http from "http";
 import { Server } from 'socket.io';
 import app from "../app.js";
-
-import { createServer } from 'node:http';
+// import { createServer } from 'node:http';
 import {connectMongo} from "../db/connection.js";
 
 const server = http.createServer(app);
