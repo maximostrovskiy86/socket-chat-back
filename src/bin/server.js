@@ -2,8 +2,9 @@ import dotenv from 'dotenv';
 import http from "http";
 import { Server } from 'socket.io';
 import app from "../app.js";
-// import { createServer } from 'node:http';
 import {connectMongo} from "../db/connection.js";
+import { getMessagesController, createMessageController } from "../controllers/messageController.js";
+import { getAllUsersController} from "../controllers/userController.js";
 
 const server = http.createServer(app);
 export const io = new Server(server, {
@@ -25,18 +26,14 @@ const start = async () => {
 			console.log(`Server works at port !!!!!!!!!!!${PORT}!`);
 		});
 		
-		io.on('connection', async (socket) => {
+		
+		
+		io.on('connection',  (socket) => {
 			console.log('a user connected');
 			// console.log('socket', socket);
-			// console.log('socket.id', socket.id);
-			
-			socket.on("CHAT_MESSAGE", async (message) => {
-				console.log("Message", message)
-				// io.emit("CHAT_MESSAGE", message);
-			})
-			
-			// io.emit("CHAT_UPDATE", { message: newMsg });
-			
+			createMessageController(socket)
+			getMessagesController(socket);
+			getAllUsersController(io, socket);
 		});
 	} catch (err) {
 		console.error(`Failed to launch application with error: ${err.message}`);
