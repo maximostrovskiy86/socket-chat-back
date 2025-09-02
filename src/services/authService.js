@@ -43,9 +43,9 @@ export const login = async (username, password) => {
                 isBanned: false,
                 isMuted: false,
             });
-			console.log("candidate", candidate);
+			console.log("candidateRRRR", candidate);
 
-            return { user: candidate, token: getToken(candidate) };
+            return { userData: candidate, token: getToken(candidate) };
         }
 
         if (candidate.isBanned) {
@@ -75,7 +75,7 @@ export const login = async (username, password) => {
             // candidate.isOnline = true;
         }
 
-        return { user: candidate, token };
+        return { userData: candidate, token };
     } catch (e) {
         // console.log(e);
         // res.status(400).json({ message: "Login error" });

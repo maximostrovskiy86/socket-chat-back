@@ -35,6 +35,9 @@ const start = async () => {
 				console.log("Message", message)
 				// io.emit("CHAT_MESSAGE", message);
 			})
+			
+			// io.emit("CHAT_UPDATE", { message: newMsg });
+			
 		});
 	} catch (err) {
 		console.error(`Failed to launch application with error: ${err.message}`);
