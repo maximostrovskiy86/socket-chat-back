@@ -5,13 +5,13 @@ import { login} from "../services/authService.js";
 export const authController = async (req, res) => {
   
   try {
-    console.log("REQUEST",req.body);
+    // console.log("REQUEST",req.body);
     
     const { username, password } = req.body;
 
     const data = await login(username, password);
     
-    console.log("DATA", data);
+    // console.log("DATA", data);
 
     if (!data) {
       return res.status(409).json({
