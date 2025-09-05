@@ -15,7 +15,20 @@ export const createMessage = async (message) => {
 
 export const getMessages = async () => {
 	try {
-		return await MessageModel.find().sort({createdAt: -1,}).limit(20);
+		return await MessageModel.find().sort({createdAt: 1,}).limit(50);
+	} catch (e) {
+		console.log(e.message);
+	}
+};
+
+export const getMessage = async (username) => {
+	try {
+		const lastMessage = await MessageModel.findOne({ username }).sort({
+			createdAt: -1,
+		});
+		// const lastMessage = await Message.find({ username });
+		// console.log("LAST_MESSAGE", lastMessage);
+		return lastMessage;
 	} catch (e) {
 		console.log(e.message);
 	}
