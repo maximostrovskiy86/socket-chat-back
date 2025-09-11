@@ -15,7 +15,7 @@ export const createMessage = async (message) => {
 
 export const getMessages = async () => {
 	try {
-		return await MessageModel.find().sort({createdAt: 1,}).limit(50);
+		return await MessageModel.find().sort({createdAt: 1,}).limit(200);
 	} catch (e) {
 		console.log(e.message);
 	}
