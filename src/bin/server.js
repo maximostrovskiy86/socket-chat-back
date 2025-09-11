@@ -80,6 +80,7 @@ const start = async () => {
 				console.log("ID", id, "isMuted", isMuted)
 				
 				const user = await changeUserById(id, { isMuted: !isMuted });
+				console.log("USER.isMuted", user.isMuted)
 				const s = await io.fetchSockets();
 				const uOn = s.map(
 					(elem) =>
@@ -91,7 +92,7 @@ const start = async () => {
 				
 				const sock = await io.fetchSockets();
 				const exists = sock.find((s) => s.user.id === id);
-				
+				console.log("EXISTS", Boolean(exists))
 				if (exists) {
 					console.log("USER_UPDATE", user);
 					exists.emit("USER_UPDATE", user);
