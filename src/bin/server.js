@@ -1,14 +1,14 @@
 import dotenv from 'dotenv';
-import http from "http";
 import {Server} from 'socket.io';
+import { createServer } from 'node:http';
 import app from "../app.js";
 import {connectMongo} from "../db/connection.js";
 import {getMessagesController, createMessageController} from "../controllers/messageController.js";
 import {getAllUsersController, getOnlineUsers, changeUserById} from "../controllers/userController.js";
 import {decodeJwt} from "../helpers/decodeJwt.js";
 
-const server = http.createServer(app);
-export const io = new Server(server, {
+const httpServer = createServer(app);
+export const io = new Server(httpServer, {
 	cors: {
 		origin: "*",
 	},
@@ -22,7 +22,7 @@ const start = async () => {
 	try {
 		await connectMongo();
 		
-		server.listen(PORT, (err) => {
+		httpServer.listen(PORT, (err) => {
 			if (err) console.error('Error at server.js launch:', err);
 			console.log(`Server works at port !!!!!!!!!!!${PORT}!`);
 		});
