@@ -11,7 +11,7 @@ const messageSchema = new mongoose.Schema(
       required: [true, "Topic is required"],
     },
   },
-  { versionKey: false, timestamps: true }
+  { versionKey: false, timestamps: true },
 );
 
 const MessageModel = mongoose.model("Messages", messageSchema);

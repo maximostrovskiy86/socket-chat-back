@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema(
       select: false,
     },
     isOnline: {
-        type: Boolean,
+      type: Boolean,
     },
     isBanned: {
       type: Boolean,
@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
     },
   },
-  { versionKey: false, timestamps: true }
+  { versionKey: false, timestamps: true },
 );
 
 const UserModel = mongoose.model("Users", userSchema);
