@@ -60,7 +60,7 @@ const start = async () => {
     });
 
     io.on("connection", async (socket) => {
-      console.log("a user connected");
+      // console.log("a user connected");
       await createMessageController(io, socket);
       await getMessagesController(socket);
 

@@ -1,7 +1,7 @@
 import Joi from "joi";
 import createHttpError from 'http-errors';
 
-export const addUserValidation = () => async (req, res, next) => {
+export const addUserValidation =  async (req, res, next) => {
   const schema = Joi.object({
     username: Joi.string().min(3).max(30).required(),
     password: Joi.string().required(),
