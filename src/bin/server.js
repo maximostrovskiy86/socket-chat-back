@@ -10,7 +10,7 @@ import {
 import {
   getAllUsersController,
   getOnlineUsers,
-  changeUserById,
+  getUserByIdAndUpdate,
 } from "../controllers/userController.js";
 import { decodeJwt } from "../helpers/decodeJwt.js";
 
@@ -60,7 +60,7 @@ const start = async () => {
     });
 
     io.on("connection", async (socket) => {
-      console.log("a user connected");
+      // console.log("a user connected");
       await createMessageController(io, socket);
       await getMessagesController(socket);
 
@@ -76,7 +76,7 @@ const start = async () => {
       await getOnlineUsers(io, usersOnline);
 
       socket.on("ON_MUTE", async ({ id, isMuted }) => {
-        const user = await changeUserById(id, { isMuted: !isMuted });
+        const user = await getUserByIdAndUpdate(id, { isMuted: !isMuted });
 
         const s = await io.fetchSockets();
         const uOn = s.map((elem) => elem.user);
@@ -100,7 +100,7 @@ const start = async () => {
           exists.disconnect();
         }
 
-        await changeUserById(id, { isBanned: !isBanned });
+        await getUserByIdAndUpdate(id, { isBanned: !isBanned });
         try {
           const users = await getAllUsersController(io, usersOnline);
           socket.emit("GET_ALL_USERS", users);

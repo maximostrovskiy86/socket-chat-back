@@ -5,6 +5,9 @@ export const authController = async (req, res) => {
     const { username, password } = req.body;
 
     const data = await login(username, password);
+    console.log("data", {...data});
+    console.log("data-2", data);
+    
     if (!data) {
       return res.status(409).json({
         status: "error",
