@@ -10,7 +10,7 @@ const getToken = (candidate) => {
 
   return jwt.sign(
     {
-      username: candidate.username,
+      email: candidate.email,
       id: candidate.id,
       createdAt: candidate.createdAt,
       isBanned: candidate.isBanned,
@@ -21,51 +21,57 @@ const getToken = (candidate) => {
   );
 };
 
-export const login = async (username, password) => {
-  let candidate = await User.findOne({ username }).select("+password");
+export const registerUser = async (email, password, username) => {
+  let candidate = await User.findOne({ email });
+  console.log("candidate-1", candidate);
 
-  if (!candidate) {
-    const hashPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-    const isAdmin = (await User.countDocuments()) === 0;
-
-    candidate = await User.create({
-      username,
-      password: hashPassword,
-      isOnline: true,
-      isAdmin: isAdmin,
-      isBanned: false,
-      isMuted: false,
-    });
-
-    return { userData: candidate, token: getToken(candidate) };
+  if (candidate) {
+    return createHttpError(409, 'Email in use');
   }
 
+  const hashPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+  const isAdmin = (await User.countDocuments()) === 0;
+
+  candidate = await User.create({
+    email,
+    username,
+    password: hashPassword,
+    isOnline: true,
+    isAdmin: isAdmin,
+    isBanned: false,
+    isMuted: false,
+  });
+
+  return { userData: candidate, token: getToken(candidate) };
+};
+
+export const loginUser = async (email, password) => {
+  
+  let candidate = await User.findOne({ email }).select("+password");
+  if (!candidate) {
+    return createHttpError(404, "Not found user");
+  }
+  
   if (candidate.isBanned) {
-    return createHttpError(403, "Wrong password");;
+    return createHttpError(403, "User is banned!");
   }
 
   const isEqual = await bcrypt.compare(password, candidate.password);
-  console.log("isEqual", isEqual);
 
   if (!isEqual) {
     return createHttpError(401, "Wrong password");
   }
-
-  // if (!(await bcrypt.compare(password, candidate.password))) {
-  //     new Error("Wrong password");
-  //   }
-
+  
   const token = getToken(candidate);
-
-  if (!candidate.isOnline) {
-    candidate = await User.findByIdAndUpdate(
-      candidate._id,
-      { isOnline: true },
-      {
-        new: true,
-      },
-    );
-  }
-
+  
+  //   if (!candidate.isOnline) {
+  //   candidate = await User.findByIdAndUpdate(
+  //     candidate._id,
+  //     { isOnline: true },
+  //     {
+  //       new: true,
+  //     },
+  //   );
+  // }
   return { userData: candidate, token };
 };

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema(
+const usersSchema = new mongoose.Schema(
   {
     email: {
       type: String,
@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema(
     },
     username: {
       type: String,
-      required: [true, "Email is required"],
+      unique: true,
     },
     password: {
       type: String,
@@ -32,6 +32,12 @@ const userSchema = new mongoose.Schema(
   { versionKey: false, timestamps: true },
 );
 
-const UserModel = mongoose.model("Users", userSchema);
+usersSchema.methods.toJSON = function () {
+  const obj = this.toObject();
+  delete obj.password;
+  return obj;
+};
+
+const UserModel = mongoose.model("Users", usersSchema);
 
 export default UserModel;
