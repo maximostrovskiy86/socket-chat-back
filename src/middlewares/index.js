@@ -1,8 +1,7 @@
 import { authMiddleware } from "./authMiddleware.js";
-import { addUserValidation } from "./validationMiddleware.js";
 
 const middleware = {
-  authMiddleware,
-  addUserValidation,
+  authMiddleware
 };
+
 export default middleware;

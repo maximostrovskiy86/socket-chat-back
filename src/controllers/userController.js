@@ -18,8 +18,8 @@ export const getOnlineUsers = async (io, usersOnline) => {
 
 export const  getUserByIdAndUpdate = async (id, data) => {
   try {
-    const user = await updateUser({ _id: id }, { ...data });
-    return user;
+    return await updateUser({ _id: id }, { ...data });
+
   } catch (e) {
     console.log("changeUserById:", e.message);
   }

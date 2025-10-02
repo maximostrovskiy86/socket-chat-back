@@ -35,12 +35,13 @@ const start = async () => {
 
     io.use(async (socket, next) => {
       const verifyToken = socket.handshake.auth.token;
-
+      console.log("SOCKET", socket);
       if (!verifyToken) {
         socket.disconnect();
       }
 
       const user = await decodeJwt(verifyToken);
+      console.log("verifyToken_USER", user);
 
       // get user from db by id and test for ban status
       if (!user || user.isBanned) {
@@ -65,16 +66,22 @@ const start = async () => {
       await getMessagesController(socket);
 
       const sockets = await io.fetchSockets();
+      // console.log("SOCKETS", sockets);
+      
       const usersOnline = sockets.map((elem) => elem?.user);
-
+      
       const allUsers = await getAllUsersController(io, usersOnline);
       sockets.map((socket) => {
         if (socket.user.isAdmin) {
           socket.emit("GET_ALL_USERS", allUsers);
         }
       });
+      
+      // const usersOnline = sockets.map((elem) => elem?.user);
+      
       await getOnlineUsers(io, usersOnline);
-
+      
+      
       socket.on("ON_MUTE", async ({ id, isMuted }) => {
         const user = await getUserByIdAndUpdate(id, { isMuted: !isMuted });
 
@@ -116,10 +123,8 @@ const start = async () => {
             // console.log("elem.user", elem.user);
             elem.user,
         );
-
-        // send all list for admins
+        
         io.emit("GET_ALL_USERS", await getAllUsersController(io, uOnline));
-        // update users online after disconnect
         io.emit(
           "GET_ONLINE_USERS",
           socks.map((s) => s.user),
