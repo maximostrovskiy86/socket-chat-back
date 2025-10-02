@@ -1,23 +1,23 @@
-import { login } from "../services/authService.js";
+import { registerUser, loginUser } from "../services/authService.js";
 
-export const authController = async (req, res) => {
-  try {
-    const { username, password } = req.body;
+export const registerController = async (req, res) => {
+  const { email, password, username } = req.body;
+  const user = await registerUser(email, password, username);
+  
+  res.status(201).json({
+    status: 201,
+    message: "Successfully registered a user!",
+    ...user,
+  });
+};
 
-    const data = await login(username, password);
-    if (!data) {
-      return res.status(409).json({
-        status: "error",
-        code: 409,
-        message: "Already exist",
-      });
-    }
-
-    res.json({
-      status: "success",
-      ...data,
-    });
-  } catch (e) {
-    console.log(e.message);
-  }
+export const loginController = async (req, res) => {
+  const { email, password } = req.body;
+  const user = await loginUser(email, password);
+  
+  res.json({
+    status: 200,
+    message: `Successfully login!`,
+    ...user,
+  });
 };

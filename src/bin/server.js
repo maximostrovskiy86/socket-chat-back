@@ -10,7 +10,7 @@ import {
 import {
   getAllUsersController,
   getOnlineUsers,
-  changeUserById,
+  getUserByIdAndUpdate,
 } from "../controllers/userController.js";
 import { decodeJwt } from "../helpers/decodeJwt.js";
 
@@ -35,12 +35,13 @@ const start = async () => {
 
     io.use(async (socket, next) => {
       const verifyToken = socket.handshake.auth.token;
-
+      console.log("SOCKET", socket);
       if (!verifyToken) {
         socket.disconnect();
       }
 
       const user = await decodeJwt(verifyToken);
+      console.log("verifyToken_USER", user);
 
       // get user from db by id and test for ban status
       if (!user || user.isBanned) {
@@ -60,23 +61,29 @@ const start = async () => {
     });
 
     io.on("connection", async (socket) => {
-      console.log("a user connected");
+      // console.log("a user connected");
       await createMessageController(io, socket);
       await getMessagesController(socket);
 
       const sockets = await io.fetchSockets();
+      // console.log("SOCKETS", sockets);
+      
       const usersOnline = sockets.map((elem) => elem?.user);
-
+      
       const allUsers = await getAllUsersController(io, usersOnline);
       sockets.map((socket) => {
         if (socket.user.isAdmin) {
           socket.emit("GET_ALL_USERS", allUsers);
         }
       });
+      
+      // const usersOnline = sockets.map((elem) => elem?.user);
+      
       await getOnlineUsers(io, usersOnline);
-
+      
+      
       socket.on("ON_MUTE", async ({ id, isMuted }) => {
-        const user = await changeUserById(id, { isMuted: !isMuted });
+        const user = await getUserByIdAndUpdate(id, { isMuted: !isMuted });
 
         const s = await io.fetchSockets();
         const uOn = s.map((elem) => elem.user);
@@ -100,7 +107,7 @@ const start = async () => {
           exists.disconnect();
         }
 
-        await changeUserById(id, { isBanned: !isBanned });
+        await getUserByIdAndUpdate(id, { isBanned: !isBanned });
         try {
           const users = await getAllUsersController(io, usersOnline);
           socket.emit("GET_ALL_USERS", users);
@@ -116,10 +123,8 @@ const start = async () => {
             // console.log("elem.user", elem.user);
             elem.user,
         );
-
-        // send all list for admins
+        
         io.emit("GET_ALL_USERS", await getAllUsersController(io, uOnline));
-        // update users online after disconnect
         io.emit(
           "GET_ONLINE_USERS",
           socks.map((s) => s.user),

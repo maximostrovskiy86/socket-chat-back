@@ -3,7 +3,7 @@ import {
   getMessages,
   getMessage,
 } from "../services/messageService.js";
-import UserModel from "../model/userModel.js";
+import UserModel from "../db/models/userModel.js";
 
 export const getMessagesController = async (socket) => {
   const allMessages = await getMessages();

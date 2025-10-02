@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 export const connectMongo = async () => {
+  // eslint-disable-next-line no-undef
   const uri = process.env.MONGO_URL;
   if (!uri) {
     throw new Error(
